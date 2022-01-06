@@ -1,7 +1,7 @@
 # gorabbit
 ## Rabbit MQ Publish & Subscribe
 
-Code wrapper for AMQP Rabbit MQ publish subscribe library
+Simple library for AMQP Rabbit MQ publish subscribe
 
 ## Instalation
 Install gorabbit depedency on your projects
