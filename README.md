@@ -87,7 +87,7 @@ Create struct for message body
 
 type Message struct {
     Name string `json:"name"`
-    Address string `json:"address"
+    Address string `json:"address"`
 }
 
 ```
