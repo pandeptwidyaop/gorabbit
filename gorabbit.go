@@ -72,7 +72,7 @@ func (mq *RabbitMQ) Bind(bindings []string) error {
 
 	mq.queue, err = mq.channel.QueueDeclare(
 		mq.name,
-		false,
+		true,
 		false,
 		false,
 		false,
