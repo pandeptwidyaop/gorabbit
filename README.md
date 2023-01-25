@@ -71,11 +71,24 @@ func handleConsume(mq gorabbit.RabbitMQ, queue string, deliveries <-chan amqp.De
         switch d.RoutingKey {
         case "routing_a": 
             log.Println("message come from routing_a")
+            // IMPORTANT !!!
+            // Acknowledge the message
+            // this will be called when success proceed
+            // the message, if were not, the message will be still queued
+            ackMessage(d)
         case "routing_b":
             log.Println("message come from routing_b")
+            ackMessage(d)
         case "routing_c":
             log.Println("message come from routing_c")
+            ackMessage(d)
         }
+    }
+}
+
+func ackMessage(msg *amqp.Delivery) {
+    if err := d.Ack(); err != nil {
+        log.Fatal("Failed to acknowledge !")
     }
 }
 ```
