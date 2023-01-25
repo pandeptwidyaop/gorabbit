@@ -124,7 +124,7 @@ func (mq *RabbitMQ) Consume() (map[string]<-chan amqp.Delivery, error) {
 		deliveries, err := mq.channel.Consume(
 			mq.queue.Name,
 			"",
-			true,
+			false, //auto acknowledge
 			false,
 			false,
 			false,
