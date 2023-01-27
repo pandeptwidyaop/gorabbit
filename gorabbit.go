@@ -1,10 +1,11 @@
 package gorabbit
 
 import (
+	"context"
 	"errors"
 	"log"
 
-	"github.com/streadway/amqp"
+	amqp "github.com/rabbitmq/amqp091-go"
 )
 
 var (
@@ -142,7 +143,10 @@ func (mq *RabbitMQ) HandleConsumedDeliveries(q string, delivery <-chan amqp.Deli
 	for {
 		go fn(*mq, q, delivery)
 		if err := <-mq.err; err != nil {
-			mq.Reconnect()
+			err := mq.Reconnect()
+			if err != nil {
+				panic(err)
+			}
 			deliveries, err := mq.Consume()
 			if err != nil {
 				panic(err)
@@ -157,7 +161,10 @@ func (mq *RabbitMQ) Publish(event string, contentType string, message []byte) er
 	select {
 	case err := <-mq.err:
 		if err != nil {
-			mq.Reconnect()
+			err := mq.Reconnect()
+			if err != nil {
+				return err
+			}
 		}
 	default:
 	}
@@ -167,7 +174,10 @@ func (mq *RabbitMQ) Publish(event string, contentType string, message []byte) er
 		Body:        message,
 	}
 
-	return mq.channel.Publish(
+	ctx := context.Background()
+
+	return mq.channel.PublishWithContext(
+		ctx,
 		mq.exchange,
 		event,
 		false,
