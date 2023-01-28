@@ -143,16 +143,19 @@ func (mq *RabbitMQ) HandleConsumedDeliveries(q string, delivery <-chan amqp.Deli
 	for {
 		go fn(*mq, q, delivery)
 		if err := <-mq.err; err != nil {
-			err := mq.Reconnect()
-			if err != nil {
-				panic(err)
-			}
-			deliveries, err := mq.Consume()
-			if err != nil {
-				panic(err)
-			}
+			// Hard fail during connection loss
+			panic(err)
+			// err := mq.Reconnect()
+			// if err != nil {
+			// 	log.Println(err)
+			// 	panic(err)
+			// }
+			// deliveries, err := mq.Consume()
+			// if err != nil {
+			// 	panic(err)
+			// }
 
-			delivery = deliveries[q]
+			// delivery = deliveries[q]
 		}
 	}
 }
